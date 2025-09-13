@@ -64,8 +64,20 @@ impl Lexer {
         let kind = match self.curr() {
             '*' => TokenKind::Star,
             '/' => TokenKind::Slash,
-            '+' => TokenKind::Plus,
-            '-' => TokenKind::Minus,
+            '+' => {
+                if self.peek() == '+' {
+                    TokenKind::Inc
+                } else {
+                    TokenKind::Plus
+                }
+            },
+            '-' => {
+                if self.peek() == '-' {
+                    TokenKind::Decr
+                } else {
+                    TokenKind::Minus
+                }
+            },
             ';' => TokenKind::Semicolon,
             '(' => TokenKind::LParen,
             ')' => TokenKind::RParen,
