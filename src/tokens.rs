@@ -2,8 +2,8 @@ use std::fmt;
 
 #[derive(Clone, Debug)]
 pub struct Location {
-    col: usize,
-    line: usize,
+    pub col: usize,
+    pub line: usize,
 }
 
 impl Location {
@@ -29,9 +29,9 @@ impl fmt::Display for Location {
 
 #[derive(Clone, Debug)]
 pub struct Token {
-    kind: TokenKind,
-    literal: String,
-    location: Location,
+    pub kind: TokenKind,
+    pub literal: String,
+    pub location: Location,
 }
 
 impl Token {
