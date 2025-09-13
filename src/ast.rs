@@ -1,4 +1,14 @@
 use crate::tokens::{Token, TokenKind};
+
+pub enum Statement {
+    Return {
+        value: Option<Expression>
+    },
+    ExpressionStatement {
+        expression: Expression,
+    },
+}
+
 #[derive(Debug)]
 pub enum Expression {
     Binary {
