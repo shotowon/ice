@@ -61,4 +61,6 @@ pub enum TokenKind {
     Float,
     String,
     Println,
+    Comma,
+    Return,
 }
