@@ -1,4 +1,4 @@
-use std::fmt;
+use std::fmt::{self, Display};
 
 #[derive(Clone, Debug)]
 pub struct Location {
@@ -44,7 +44,7 @@ impl Token {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TokenKind {
     EOF,
     Plus,
@@ -72,3 +72,28 @@ pub enum TokenKind {
         kind == *self
     }
 }
+
+impl Display for TokenKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            TokenKind::EOF        => "end of file",
+            TokenKind::Plus       => "+",
+            TokenKind::Minus      => "-",
+            TokenKind::Star       => "*",
+            TokenKind::Slash      => "/",
+            TokenKind::Inc        => "++",
+            TokenKind::Decr       => "decr",
+            TokenKind::Semicolon  => ";",
+            TokenKind::LParen     => "(",
+            TokenKind::RParen     => ")",
+            TokenKind::Id         => "identifier",
+            TokenKind::Int        => "integer literal",
+            TokenKind::Float      => "float literal",
+            TokenKind::String     => "string literal",
+            TokenKind::Comma      => ",",
+            TokenKind::Return     => "return",
+        };
+        write!(f, "{}", s)
+    }
+}
+
