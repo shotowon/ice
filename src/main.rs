@@ -2,7 +2,7 @@ use colored::*;
 
 use std::{env, fs::File, io::Read, process};
 
-use ice::lexer::Lexer;
+use ice::{lexer::Lexer, parser};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -29,8 +29,10 @@ fn main() {
     let mut lexer = Lexer::new(src.into());
     match lexer.lex() {
         Ok(tokens) => {
-            for token in tokens {
-                println!("token: {:?}", token)
+            let mut parser = parser::Parser::new(tokens);
+            let tree = parser.parse().unwrap();
+            for stmt in tree {
+                println!("stmt: {}", stmt);
             }
         }
         Err(err) => {
