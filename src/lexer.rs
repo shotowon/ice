@@ -56,6 +56,7 @@ impl Lexer {
             return Err(format!("unrecognized lexeme at {}", self.location));
         }
 
+        self.tokens.push(Token::new(TokenKind::EOF, "".into(), self.location.clone()));
         Ok(self.tokens.clone())
     }
 
