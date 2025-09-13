@@ -51,6 +51,8 @@ pub enum TokenKind {
     Minus,
     Star,
     Slash,
+    Inc, // ++
+    Decr, // decr
     Semicolon,
     LParen, //(
     RParen, // )
