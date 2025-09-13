@@ -42,6 +42,7 @@ impl Token {
             location,
         }
     }
+
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -60,7 +61,6 @@ pub enum TokenKind {
     Int,
     Float,
     String,
-    Println,
     Comma,
     Return,
 }
