@@ -153,6 +153,7 @@ impl Lexer {
 
     fn keyword_or_id_kind(literal: &str) -> TokenKind {
         match literal {
+            "return" => TokenKind::Return,
             _ => TokenKind::Id,
         }
     }
