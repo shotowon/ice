@@ -64,6 +64,8 @@ pub enum TokenKind {
     Comma,
     Return,
 }
+
+impl TokenKind {
     pub fn is_one_of(&self, kinds: &[TokenKind]) -> bool {
         kinds.contains(self)
     }
