@@ -81,6 +81,7 @@ impl Lexer {
             ';' => TokenKind::Semicolon,
             '(' => TokenKind::LParen,
             ')' => TokenKind::RParen,
+            ',' => TokenKind::Comma,
             _ => {
                 return None;
             }
@@ -145,14 +146,13 @@ impl Lexer {
             self.advance();
         }
 
-        let kind = self.keyword_or_id_kind(&literal);
+        let kind = Self::keyword_or_id_kind(&literal);
 
         Token::new(kind, literal, location).into()
     }
 
-    fn keyword_or_id_kind(&self, literal: &str) -> TokenKind {
+    fn keyword_or_id_kind(literal: &str) -> TokenKind {
         match literal {
-            "println" => TokenKind::Println,
             _ => TokenKind::Id,
         }
     }
