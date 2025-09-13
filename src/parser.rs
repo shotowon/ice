@@ -27,8 +27,9 @@ impl Parser {
                     if let Ok(_) =self.expect(TokenKind::Semicolon) {
                         stmts.push(Statement::Return { value: None });
                         self.advance();
-                        break;
+                        continue;
                     }
+
                     match self.parse_expr() {
                         Ok(expr) => {
                             if let Err(err) = self.expect(TokenKind::Semicolon) {
