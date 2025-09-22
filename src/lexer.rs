@@ -56,7 +56,8 @@ impl Lexer {
             return Err(format!("unrecognized lexeme at {}", self.location));
         }
 
-        self.tokens.push(Token::new(TokenKind::EOF, "".into(), self.location.clone()));
+        self.tokens
+            .push(Token::new(TokenKind::EOF, "".into(), self.location.clone()));
         Ok(self.tokens.clone())
     }
 
@@ -70,14 +71,14 @@ impl Lexer {
                 } else {
                     TokenKind::Plus
                 }
-            },
+            }
             '-' => {
                 if self.peek() == '-' {
                     TokenKind::Decr
                 } else {
                     TokenKind::Minus
                 }
-            },
+            }
             ':' => TokenKind::Colon,
             ';' => TokenKind::Semicolon,
             '(' => TokenKind::LParen,
