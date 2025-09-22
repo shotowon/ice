@@ -1,5 +1,5 @@
+use crate::ast::{Expression, Statement, Type, TypeMapping};
 use crate::tokens::{Token, TokenKind};
-use crate::ast::{Expression, Statement};
 
 pub struct Parser {
     tokens: Vec<Token>,
