@@ -147,7 +147,8 @@ impl Parser {
             return self.parse_function_call();
         }
 
-        if let Some(curr) = self.curr() {
+        if let Some(curr) = self.curr().cloned() {
+            self.advance();
             return Ok(Expression::Id { name: curr.clone() });
         }
 
