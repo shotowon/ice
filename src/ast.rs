@@ -86,9 +86,9 @@ impl fmt::Display for Expression {
             Expression::Unary { op, expr } => {
                 write!(f, "({}{})", op, expr)
             }
-            Expression::FunctionCall { name, args } => {
+            Expression::FunctionCall { callee, args } => {
                 let args_str: Vec<String> = args.iter().map(|a| a.to_string()).collect();
-                write!(f, "fcall: {}({})", name.literal, args_str.join(", "))
+                write!(f, "fcall: {}({})", callee, args_str.join(", "))
             }
             Expression::Id { name } => {
                 write!(f, "{}", name.literal)
@@ -96,9 +96,43 @@ impl fmt::Display for Expression {
             Expression::Int { value } => {
                 write!(f, "{}", value.literal)
             }
+            Expression::FunctionLiteral {
+                name,
+                params,
+                return_type,
+                body,
+            } => {
+                let name_str = name
+                    .as_ref()
+                    .map(|t| t.literal.clone())
+                    .unwrap_or("<anon>".to_string());
+
+                let params_str: Vec<String> = params
+                    .iter()
+                    .map(|p| format!("{}: {}", p.expr, p.t))
+                    .collect();
+
+                let ret_str = return_type
+                    .as_ref()
+                    .map(|t| format!("{}", t))
+                    .unwrap_or("void".to_string());
+
+                // Pretty-print body as a block
+                let body_str: Vec<String> = body.iter().map(|stmt| format!("{}", stmt)).collect();
+
+                write!(
+                    f,
+                    "fn {}({}) -> {} {{ {} }}",
+                    name_str,
+                    params_str.join(", "),
+                    ret_str,
+                    body_str.join(" ")
+                )
+            }
         }
     }
 }
+
 impl fmt::Display for Type {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
