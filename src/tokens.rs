@@ -54,14 +54,18 @@ pub enum TokenKind {
     Slash,
     Inc, // ++
     Decr, // decr
+    Colon,
     Semicolon,
     LParen, //(
     RParen, // )
+    LCurly, // {
+    RCurly, // }
     Id,
     Int,
     Float,
     String,
     Comma,
+    Fn,
     Return,
 }
 
@@ -85,14 +89,18 @@ impl Display for TokenKind {
             TokenKind::Slash      => "/",
             TokenKind::Inc        => "++",
             TokenKind::Decr       => "decr",
+            TokenKind::Colon      => ":",
             TokenKind::Semicolon  => ";",
             TokenKind::LParen     => "(",
             TokenKind::RParen     => ")",
+            TokenKind::LCurly     => "{",
+            TokenKind::RCurly     => "}",
             TokenKind::Id         => "identifier",
             TokenKind::Int        => "integer literal",
             TokenKind::Float      => "float literal",
             TokenKind::String     => "string literal",
             TokenKind::Comma      => ",",
+            TokenKind::Fn     =>  "fn",
             TokenKind::Return     => "return",
         };
         write!(f, "{}", s)
