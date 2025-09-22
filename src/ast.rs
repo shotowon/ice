@@ -1,21 +1,19 @@
 use crate::tokens::{Token, TokenKind};
 use std::fmt;
 
+#[derive(Debug, Clone)]
 pub enum Statement {
-    Return {
-        value: Option<Expression>
-    },
-    ExpressionStatement {
-        expression: Expression,
-    },
+    Return { value: Option<Expression> },
+    ExpressionStatement { expression: Expression },
+    Halt,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Expression {
     Binary {
         lhs: Box<Expression>,
         op: TokenKind,
-        rhs: Box<Expression>
+        rhs: Box<Expression>,
     },
     Unary {
         op: TokenKind,
