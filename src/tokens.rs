@@ -42,7 +42,6 @@ impl Token {
             location,
         }
     }
-
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -52,7 +51,7 @@ pub enum TokenKind {
     Minus,
     Star,
     Slash,
-    Inc, // ++
+    Inc,  // ++
     Decr, // decr
     Colon,
     Semicolon,
@@ -82,28 +81,27 @@ impl TokenKind {
 impl Display for TokenKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            TokenKind::EOF        => "end of file",
-            TokenKind::Plus       => "+",
-            TokenKind::Minus      => "-",
-            TokenKind::Star       => "*",
-            TokenKind::Slash      => "/",
-            TokenKind::Inc        => "++",
-            TokenKind::Decr       => "decr",
-            TokenKind::Colon      => ":",
-            TokenKind::Semicolon  => ";",
-            TokenKind::LParen     => "(",
-            TokenKind::RParen     => ")",
-            TokenKind::LCurly     => "{",
-            TokenKind::RCurly     => "}",
-            TokenKind::Id         => "identifier",
-            TokenKind::Int        => "integer literal",
-            TokenKind::Float      => "float literal",
-            TokenKind::String     => "string literal",
-            TokenKind::Comma      => ",",
-            TokenKind::Fn     =>  "fn",
-            TokenKind::Return     => "return",
+            TokenKind::EOF => "end of file",
+            TokenKind::Plus => "+",
+            TokenKind::Minus => "-",
+            TokenKind::Star => "*",
+            TokenKind::Slash => "/",
+            TokenKind::Inc => "++",
+            TokenKind::Decr => "decr",
+            TokenKind::Colon => ":",
+            TokenKind::Semicolon => ";",
+            TokenKind::LParen => "(",
+            TokenKind::RParen => ")",
+            TokenKind::LCurly => "{",
+            TokenKind::RCurly => "}",
+            TokenKind::Id => "identifier",
+            TokenKind::Int => "integer literal",
+            TokenKind::Float => "float literal",
+            TokenKind::String => "string literal",
+            TokenKind::Comma => ",",
+            TokenKind::Fn => "fn",
+            TokenKind::Return => "return",
         };
         write!(f, "{}", s)
     }
 }
-
