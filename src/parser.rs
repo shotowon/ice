@@ -40,48 +40,33 @@ impl Parser {
         Ok(stmts)
     }
 
+    fn parse_stmt(&mut self) -> Result<Statement, String> {
+        if let Some(curr) = self.curr() {
+            match curr.kind {
+                TokenKind::EOF => return Ok(Statement::Halt),
                 TokenKind::Return => {
                     self.advance();
-                    
-                    if let Ok(_) =self.expect(TokenKind::Semicolon) {
-                        stmts.push(Statement::Return { value: None });
+                    if let Ok(_) = self.expect(TokenKind::Semicolon) {
                         self.advance();
-                        continue;
+                        return Ok(Statement::Return { value: None });
                     }
 
-                    match self.parse_expr() {
-                        Ok(expr) => {
-                            if let Err(err) = self.expect(TokenKind::Semicolon) {
-                                errs.push(err);
-                                break;
-                            }
-                            self.advance();
-                            stmts.push(Statement::Return { value: Some(expr) });
-                        },
-                        Err(err) => {
-                            errs.push(err);
-                            break;
-                        }
-                    }
+                    let expr = self.parse_expr()?;
+
+                    self.expect(TokenKind::Semicolon)?;
+                    self.advance();
+                    return Ok(Statement::Return { value: Some(expr) });
                 }
                 _ => {
-                    match self.parse_expr() { 
-                        Ok(expr) => {
-                            if let Err(err) = self.expect(TokenKind::Semicolon) {
-                                errs.push(err);
-                                break;
-                            }
+                    let expr = self.parse_expr()?;
+
+                    match expr {
+                        Expression::FunctionLiteral { .. } => {}
+                        _ => {
+                            self.expect(TokenKind::Semicolon)?;
                             self.advance();
-                            stmts.push(Statement::ExpressionStatement { expression: expr });
-                        },
-                        Err(err) => {
-                            errs.push(err);
-                            break;
                         }
                     }
-                },
-            }
-        }
 
         if errs.len() != 0 {
             return Err(errs);
