@@ -156,19 +156,21 @@ impl Parser {
 
     fn parse_function_call(&mut self) -> Result<Expression, String> {
         self.expect(TokenKind::Id)?;
-        let name: Token;
         if let Some(curr) = self.curr() {
-            name = curr.clone();
+            let name = curr.clone();
 
             self.advance();
             self.expect(TokenKind::LParen)?;
             self.advance();
-            
+
             let mut args: Vec<Expression> = Vec::new();
 
-            while let Some(curr) = self.curr() { 
+            while let Some(curr) = self.curr() {
                 match curr.kind {
-                    TokenKind::RParen => { self.advance(); break; }
+                    TokenKind::RParen => {
+                        self.advance();
+                        break;
+                    }
                     _ => {
                         args.push(self.parse_expr()?);
                         if let Ok(_) = self.expect(TokenKind::Comma) {
@@ -178,9 +180,12 @@ impl Parser {
                 }
             }
 
-            return Ok(Expression::FunctionCall { name, args });
+            return Ok(Expression::FunctionCall {
+                callee: Box::from(Expression::Id { name }),
+                args,
+            });
         }
-        
+
         Err("expected identifier before function call".into())
     }
 
