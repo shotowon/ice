@@ -20,7 +20,7 @@ pub enum Expression {
         expr: Box<Expression>,
     },
     FunctionCall {
-        name: Token,
+        callee: Box<Expression>,
         args: Vec<Expression>,
     },
     Id {
