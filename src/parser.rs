@@ -213,14 +213,20 @@ impl Parser {
     fn expect(&self, kind: TokenKind) -> Result<(), String> {
         if let Some(curr) = self.curr() {
             if curr.kind != kind {
-                return Err(format!("expected {:?} at line {} col {}", kind, curr.location.line, curr.location.col));
+                return Err(format!(
+                    "expected {:?} at line {} col {}",
+                    kind, curr.location.line, curr.location.col
+                ));
             }
 
             return Ok(());
         }
 
         if let Some(last) = self.tokens.last() {
-            return Err(format!("input expected {} after token at line {} col {} ", kind, last.location.line, last.location.col));
+            return Err(format!(
+                "input expected {} after token at line {} col {} ",
+                kind, last.location.line, last.location.col
+            ));
         }
 
         Err(format!("input expected {}", kind))
