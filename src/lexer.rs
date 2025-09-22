@@ -78,9 +78,12 @@ impl Lexer {
                     TokenKind::Minus
                 }
             },
+            ':' => TokenKind::Colon,
             ';' => TokenKind::Semicolon,
             '(' => TokenKind::LParen,
             ')' => TokenKind::RParen,
+            '{' => TokenKind::LCurly,
+            '}' => TokenKind::RCurly,
             ',' => TokenKind::Comma,
             _ => {
                 return None;
@@ -154,6 +157,8 @@ impl Lexer {
     fn keyword_or_id_kind(literal: &str) -> TokenKind {
         match literal {
             "return" => TokenKind::Return,
+            "fn" => TokenKind::Fn,
+            "int" => TokenKind::Int,
             _ => TokenKind::Id,
         }
     }
