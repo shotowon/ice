@@ -31,6 +31,28 @@ pub enum Expression {
     },
 }
 
+#[derive(Debug, Clone)]
+pub enum Type {
+    Int,
+    String,
+    Function {
+        return_type: Box<Type>,
+        param_types: Vec<Type>,
+    },
+}
+
+#[derive(Debug, Clone)]
+pub struct TypeMapping {
+    pub expr: Expression,
+    pub t: Type,
+}
+
+impl TypeMapping {
+    pub fn new(expr: Expression, t: Type) -> Self {
+        Self { expr, t }
+    }
+}
+
 impl fmt::Display for Statement {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -68,5 +90,26 @@ impl fmt::Display for Expression {
                 write!(f, "{}", value.literal)
             }
         }
+    }
+}
+impl fmt::Display for Type {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Type::Int => write!(f, "int"),
+            Type::String => write!(f, "string"),
+            Type::Function {
+                return_type,
+                param_types,
+            } => {
+                let params_str: Vec<String> = param_types.iter().map(|p| p.to_string()).collect();
+                write!(f, "fn({}) -> {}", params_str.join(", "), return_type)
+            }
+        }
+    }
+}
+
+impl fmt::Display for TypeMapping {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}: {}", self.expr, self.t)
     }
 }
