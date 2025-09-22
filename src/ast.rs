@@ -23,6 +23,12 @@ pub enum Expression {
         callee: Box<Expression>,
         args: Vec<Expression>,
     },
+    FunctionLiteral {
+        name: Option<Token>,
+        params: Vec<TypeMapping>,
+        return_type: Option<Type>,
+        body: Vec<Statement>,
+    },
     Id {
         name: Token,
     },
@@ -58,7 +64,7 @@ impl fmt::Display for Statement {
         match self {
             Statement::ExpressionStatement { expression } => {
                 write!(f, "{};", expression)
-            },
+            }
             Statement::Return { value } => {
                 if let Some(val) = value {
                     write!(f, "return {}", val)
