@@ -184,6 +184,106 @@ impl Parser {
         Err("expected identifier before function call".into())
     }
 
+    fn parse_function_literal_or_call(&mut self) -> Result<Expression, String> {
+        let fn_keyword = self.curr_expect(TokenKind::Fn)?.clone();
+        self.advance();
+
+        let mut name: Option<Token> = None;
+
+        if let Ok(id) = self.curr_expect(TokenKind::Id) {
+            name = Some(id.clone());
+            self.advance();
+        }
+
+        self.expect(TokenKind::LParen)?;
+        self.advance();
+
+        let mut params: Vec<TypeMapping> = Vec::new();
+
+        while let Err(_) = self.expect(TokenKind::RParen) {
+            let param_name = self.curr_expect(TokenKind::Id)?.clone();
+            self.advance();
+            self.expect(TokenKind::Colon)?;
+            self.advance();
+            let param_type = self.parse_type()?;
+            params.push(TypeMapping::new(
+                Expression::Id {
+                    name: param_name.clone(),
+                },
+                param_type,
+            ));
+            if let Ok(_) = self.expect(TokenKind::Comma) {
+                self.advance();
+            }
+        }
+        self.advance();
+
+        let mut return_type: Option<Type> = None;
+        if let Ok(_) = self.expect(TokenKind::Colon) {
+            self.advance();
+            self.expect(TokenKind::Colon)?;
+            self.advance();
+
+            return_type = Some(self.parse_type()?);
+        }
+
+        self.expect(TokenKind::LCurly)?;
+        self.advance();
+
+        let mut body: Vec<Statement> = Vec::new();
+
+        while let Err(_) = self.expect(TokenKind::RCurly) {
+            let stmt = self.parse_stmt()?;
+            if let Statement::Halt = stmt {
+                return Err(format!(
+                    "unexpected end of input in function body at line: {}, col: {}",
+                    fn_keyword.location.line, fn_keyword.location.col
+                ));
+            }
+
+            body.push(stmt);
+        }
+
+        self.advance(); // skip }
+        if let Ok(_) = self.expect(TokenKind::LParen) {
+            self.advance();
+            let mut args: Vec<Expression> = Vec::new();
+
+            while let Some(curr) = self.curr() {
+                match curr.kind {
+                    TokenKind::RParen => {
+                        self.advance();
+                        break;
+                    }
+                    _ => {
+                        args.push(self.parse_expr()?);
+                        if let Ok(_) = self.expect(TokenKind::Comma) {
+                            self.advance();
+                        }
+                    }
+                }
+            }
+
+            return Ok(Expression::FunctionCall {
+                callee: Expression::FunctionLiteral {
+                    name,
+                    params,
+                    return_type,
+                    body,
+                }
+                .into(),
+                args: args,
+            });
+        }
+
+        Ok(Expression::FunctionLiteral {
+            name,
+            params,
+            return_type,
+            body,
+        })
+    }
+
     fn parse_type(&mut self) -> Result<Type, String> {
         if let Some(curr) = self.curr() {
             match curr.kind {
