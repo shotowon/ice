@@ -232,11 +232,33 @@ impl Parser {
         Err(format!("input expected {}", kind))
     }
 
-    fn peek(&self) -> Option<&Token> { 
+    fn expect_off(&self, kind: TokenKind, offset: usize) -> Result<(), String> {
+        if let Some(token) = self.peek_off(offset) {
+            if token.kind != kind {
+                return Err(format!(
+                    "expected {:?} at line {} col {}",
+                    kind, token.location.line, token.location.col
+                ));
+            }
+
+            return Ok(());
+        }
+
+        if let Some(last) = self.tokens.last() {
+            return Err(format!(
+                "input expected {} after token at line {} col {} ",
+                kind, last.location.line, last.location.col
+            ));
+        }
+
+        Err(format!("input expected {}", kind))
+    }
+
+    fn peek(&self) -> Option<&Token> {
         self.peek_off(1)
     }
 
-    fn peek_off(&self, offset: usize) -> Option<&Token> { 
+    fn peek_off(&self, offset: usize) -> Option<&Token> {
         if self.pos + offset >= self.tokens.len() {
             return None;
         }
