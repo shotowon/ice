@@ -33,6 +33,7 @@ impl Parser {
                 }
             }
         }
+
         if errs.len() != 0 {
             return Err(errs);
         }
@@ -68,11 +69,12 @@ impl Parser {
                         }
                     }
 
-        if errs.len() != 0 {
-            return Err(errs);
+                    return Ok(Statement::ExpressionStatement { expression: expr });
+                }
+            }
         }
 
-        Ok(stmts)
+        Err("expected statement before the end of input".into())
     }
 
     fn parse_expr(&mut self) -> Result<Expression, String> {
@@ -80,13 +82,13 @@ impl Parser {
     }
 
     fn parse_binary(&mut self, min_bp: usize) -> Result<Expression, String> {
-        let mut lhs  = self.parse_prefix()?;
+        let mut lhs = self.parse_prefix()?;
 
         while let Some(op) = self.curr() {
             if Self::is_binary_operator(op.kind) {
-                let op = op.clone();   
+                let op = op.clone();
                 let (l_bp, r_bp) = Self::get_binding_power(op.kind);
-                
+
                 if l_bp < min_bp {
                     break;
                 }
@@ -95,7 +97,11 @@ impl Parser {
 
                 let rhs = self.parse_binary(r_bp)?;
 
-                lhs = Expression::Binary { lhs: lhs.into(), op: op.kind, rhs: rhs.into() }
+                lhs = Expression::Binary {
+                    lhs: lhs.into(),
+                    op: op.kind,
+                    rhs: rhs.into(),
+                }
             } else {
                 break;
             }
@@ -110,8 +116,11 @@ impl Parser {
             match curr.kind {
                 TokenKind::Plus | TokenKind::Minus => {
                     self.advance();
-                    return Ok(Expression::Unary { op: curr.kind, expr: self.parse_atom()?.into() });
-                },
+                    return Ok(Expression::Unary {
+                        op: curr.kind,
+                        expr: self.parse_atom()?.into(),
+                    });
+                }
                 _ => {
                     return self.parse_atom();
                 }
@@ -125,6 +134,9 @@ impl Parser {
         if let Some(curr) = self.curr() {
             let curr = curr.clone();
             match curr.kind {
+                TokenKind::Fn => {
+                    return self.parse_function_literal_or_call();
+                }
                 TokenKind::Id => {
                     return self.parse_id_or_function_call();
                 }
