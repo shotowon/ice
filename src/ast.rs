@@ -71,7 +71,8 @@ impl fmt::Display for Statement {
                 } else {
                     write!(f, "return")
                 }
-            },
+            }
+            Statement::Halt => write!(f, "EOF"),
         }
     }
 }
