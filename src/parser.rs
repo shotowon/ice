@@ -184,6 +184,25 @@ impl Parser {
         Err("expected identifier before function call".into())
     }
 
+    fn parse_type(&mut self) -> Result<Type, String> {
+        if let Some(curr) = self.curr() {
+            match curr.kind {
+                TokenKind::Int => {
+                    self.advance();
+                    return Ok(Type::Int);
+                }
+                _ => {
+                    return Err(format!(
+                        "Expected type at line: {}, col: {}, but got: {}",
+                        curr.location.line, curr.location.col, curr.kind
+                    ));
+                }
+            }
+        }
+
+        return Err("Expected type at the end of stream".into());
+    }
+
     fn curr(&self) -> Option<&Token> {
         self.peek_off(0)
     }
