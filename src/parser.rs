@@ -8,7 +8,7 @@ pub struct Parser {
 
 impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
-        Self { 
+        Self {
             tokens: tokens,
             pos: 0,
         }
@@ -18,9 +18,28 @@ impl Parser {
         let mut stmts: Vec<Statement> = Vec::new();
         let mut errs: Vec<String> = Vec::new();
 
-        while let Some(curr) = self.curr() {
-            match curr.kind { 
-                TokenKind::EOF => break,
+        loop {
+            match self.parse_stmt() {
+                Ok(stmt) => {
+                    if let Statement::Halt = stmt {
+                        break;
+                    }
+
+                    stmts.push(stmt);
+                }
+                Err(err) => {
+                    errs.push(err);
+                    self.advance();
+                }
+            }
+        }
+        if errs.len() != 0 {
+            return Err(errs);
+        }
+
+        Ok(stmts)
+    }
+
                 TokenKind::Return => {
                     self.advance();
                     
