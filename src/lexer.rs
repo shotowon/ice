@@ -71,7 +71,14 @@ impl Lexer {
                 } else {
                     TokenKind::Plus
                 }
-            }
+            },
+            '=' => {
+                if self.peek() == '=' {
+                    TokenKind::Eq2
+                } else {
+                    TokenKind::Eq
+                }
+            },
             '-' => {
                 if self.peek() == '-' {
                     TokenKind::Decr

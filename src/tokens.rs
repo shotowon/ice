@@ -51,6 +51,8 @@ pub enum TokenKind {
     Minus,
     Star,
     Slash,
+    Eq,
+    Eq2,
     Inc,  // ++
     Decr, // decr
     Colon,
@@ -86,6 +88,8 @@ impl Display for TokenKind {
             TokenKind::Minus => "-",
             TokenKind::Star => "*",
             TokenKind::Slash => "/",
+            TokenKind::Eq => "=",
+            TokenKind::Eq2 => "==",
             TokenKind::Inc => "++",
             TokenKind::Decr => "decr",
             TokenKind::Colon => ":",
