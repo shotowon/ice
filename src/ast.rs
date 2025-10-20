@@ -88,7 +88,7 @@ impl fmt::Display for Expression {
             }
             Expression::FunctionCall { callee, args } => {
                 let args_str: Vec<String> = args.iter().map(|a| a.to_string()).collect();
-                write!(f, "fcall: {}({})", callee, args_str.join(", "))
+                write!(f, "(fcall: {}({}))", callee, args_str.join(", "))
             }
             Expression::Id { name } => {
                 write!(f, "{}", name.literal)
